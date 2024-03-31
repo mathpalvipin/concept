@@ -12,18 +12,19 @@ const Home = () => {
   socket.connect();
 
   socket.on("getRoomId", (id) => {
-    console.log(id);
     setInRoom(id);
     localStorage.setItem('room',id);
-   
   });
   if(localStorage.getItem('user')){
+    
     setPlayer(localStorage.getItem('user'));
     setIsPlayerExist(true);
+  
+    
   }
   if(localStorage.getItem('room')){
-    setPlayer(localStorage.getItem('user'));
-    setIsPlayerExist(true);
+  
+    setInRoom(localStorage.getItem('room'));
   }
   return () => {
    
@@ -34,7 +35,7 @@ const Home = () => {
    {!isPlayerExist?
    <CreatePlayer propplayer={{player,setPlayer}}></CreatePlayer>:
    !inRoom? <JoinRoom socket={socket} setInRoom={setInRoom}></JoinRoom>:
-   <Game socket={socket} ></Game>
+   <Game socket={socket} inRoom={inRoom}  player={player}></Game>
 }</>
   
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRoom } from "../api.js/api";
+
 import axios from "axios";
 const JoinRoom = ({ propplayer, socket , setInRoom}) => {
   const [Room, setRoom] = useState([]);
@@ -10,8 +11,9 @@ const JoinRoom = ({ propplayer, socket , setInRoom}) => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       socket.emit("AddRoom", { Name: newRoom, user });
-      setInRoom(true);
-      //  localStorage.setItem('Room',room._id);
+       
+       setInRoom(true);
+      //  localStorage.setItem('room',room._id);
     } catch (e) {
       alert("unable to create Room");
     }
@@ -21,8 +23,8 @@ const JoinRoom = ({ propplayer, socket , setInRoom}) => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       socket.emit("addToRoom", { room, user });
-      setInRoom(true);
-      //  localStorage.setItem('Room',room._id);
+       setInRoom(true);
+      //  localStorage.setItem('room',room._id);
     } catch (e) {
       alert("unable to create Room");
     }
