@@ -1,3 +1,4 @@
+https://blog.logrocket.com/websocket-tutorial-real-time-node-react/#what-websocket-protocol
 WebSocket is a modern way to have persistent browser-server connections.
 
 WebSockets don’t have cross-origin limitations.

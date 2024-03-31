@@ -1,0 +1,5 @@
+using socket.io to  boardcast the game result to all user
+
+##socke.io 
+https://socket.io/docs/v4/tutorial/introduction
+https://socket.io/docs/v4/tutorial/introduction
