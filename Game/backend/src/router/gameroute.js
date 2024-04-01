@@ -4,10 +4,12 @@ import Player from "../model/Player.js"
 import Room from "../model/Room.js"
 router.post ('/createPlayer',async(req,res)=>{
     try {
-        const name=req.body.name;
+        const name=req.body.Name;
         const color = req.body.color?req.body.color:"blue";
+        
         const player= new Player({Name:name, Color:color});
-        await player.save();
+       const resp= await player.save();
+       console.log(resp);
         res.status(200).json({message:"usercreated",Player:player})
     }
     catch(e){

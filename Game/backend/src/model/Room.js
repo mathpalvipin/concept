@@ -4,6 +4,7 @@ const Room = mongoose.Schema({
   Chance: { type: Number , default: 0, required: true },
   NoOfPlayers: { type: Number, default: 0, required: true },
   MaxPlayer: { type: Number, default: 2, required: true },
+  Winner: { type: String, default: null },
   Players: {
     type: Array,
     default: [],

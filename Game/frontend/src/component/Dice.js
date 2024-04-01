@@ -20,7 +20,7 @@ useEffect(()=>{
         {renderDiceFace(currentRoll)}
       </div>
       <h2>Dice Roll: {currentRoll}</h2>
-      <button disabled={disabled?true:false } className={`{button ${disabled?"hover: bg-gray-500 ":" "} bg-orange-400 p-1 mb-2 border rounded-md text-white shadow-md shadow-orange-100}`} onClick={rollDice}>Roll Dice</button>
+      <button disabled={disabled ?true:false } className={`button ${disabled?"bg-gray-500 ":"bg-orange-400"}  p-1 mb-2 border rounded-md text-white shadow-md shadow-orange-100 `} onClick={rollDice}>Roll Dice</button>
     </div>
   );
 };

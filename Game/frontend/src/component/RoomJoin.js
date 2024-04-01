@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { getRoom } from "../api.js/api";
 
 import axios from "axios";
-const JoinRoom = ({ propplayer, socket , setInRoom}) => {
-  const [Room, setRoom] = useState([]);
+const JoinRoom = ({ propplayer, socket }) => {
+  const [Rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState();
   const handleAddRoom = (e) => {
     e.preventDefault();
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      socket.emit("AddRoom", { Name: newRoom, user });
+      const player = JSON.parse(localStorage.getItem("player"));
+      socket.emit("AddRoom", { Name: newRoom, player });
        
-       setInRoom(true);
+    
+      
       //  localStorage.setItem('room',room._id);
     } catch (e) {
       alert("unable to create Room");
@@ -20,23 +20,25 @@ const JoinRoom = ({ propplayer, socket , setInRoom}) => {
   };
   const addToRoom =(room)=>{
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const player = JSON.parse(localStorage.getItem("player"));
 
-      socket.emit("addToRoom", { room, user });
-       setInRoom(true);
+      socket.emit("addToRoom", { room, player });
+       
       //  localStorage.setItem('room',room._id);
     } catch (e) {
       alert("unable to create Room");
     }
   }
   useEffect(() => {
-    socket.on("getRooms", (rooms) => {
+    socket.emit('getRooms');
+    socket.on("Rooms", (rooms) => {
       // console.log(rooms);
-      setRoom(rooms);
+      console.log(rooms);
+      setRooms(rooms);
     });
     socket.on("refreshRoomsList", (rooms) => {
       // console.log(rooms);
-      setRoom(rooms);
+      setRooms(rooms);
       
     });
   }, []);
@@ -48,7 +50,7 @@ const JoinRoom = ({ propplayer, socket , setInRoom}) => {
           JOIN Room{" "}
         </div>
         <div className="w-full h-5/6 overflow-auto text-center border  border-b-black">
-          {Room?.map((room) => {
+          {Rooms?.map((room) => {
             return (
               <div className=" flex flex-row justify-evenly border-t border-b hover:text-xl hover:bg-green-400 border-gray-400 " onClick={()=>addToRoom(room)}>
                 <div >{room.Name}</div>

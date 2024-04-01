@@ -5,9 +5,7 @@ import ladder2 from "../icons/ladder5.png";
 import player from "../icons/player.svg";
 import { useState } from "react";
 import { useEffect } from "react";
-const Board = ({User,PlayersPostion}) => {
-  
-
+const Board = ({ User, PlayersPostion }) => {
   return (
     <>
       <div className={`bg-slate-400  relative ${classes.gamebox}  `}>
@@ -15,25 +13,28 @@ const Board = ({User,PlayersPostion}) => {
           {" "}
           <img className="w-full h-full" src={ladder2} alt="ladder" />
         </div>
-       { PlayersPostion?.map(position=> {
-        return (<div
-          className="  bg-cyan-500 border rounded-2xl w-1/10 flex justify-center flex-col items-center absolute h-1/10 z-30  p-2 ease-in duration-200 "
-          style={{
-            bottom: `${position.i * 10}%`,
-            left: `${
-                position.i % 2 !== 0
-                ? 90 - (position.j ) * 10
-                : (position.j ) * 10
-            }%`,
-          }}
-        >
-          <div className="w-4/6 h-4/6 ">
-            {" "}
-            <img src={player} className=""></img>
-          </div>
-          <div className=" w-4/6 h-4/6 text-xs overflow-x-clip  ">{position.Name}</div>
-        </div>
-        )})}
+        {PlayersPostion?.map((position, index) => {
+          return (
+            <div
+              className={`  ${index===0?"bg-cyan-500":"bg-green-600"} border rounded-2xl w-1/10 flex justify-center
+               flex-col items-center absolute h-1/10 z-30  p-2 ease-in duration-500 `}
+              style={{
+                bottom: `${position.i * 10}%`,
+                left: `${
+                  position.i % 2 !== 0 ? 90 - position.j * 10 : position.j * 10
+                }%`,
+              }}
+            >
+              <div className="w-4/6 h-4/6 ">
+                {" "}
+                <img src={player} className=""></img>
+              </div>
+              <div className=" w-4/6 h-4/6 text-xs overflow-x-clip  ">
+                {position.Name}
+              </div>
+            </div>
+          );
+        })}
         {/* {Cells.map((cell, index) => {
           var bottom = cell.i * 10;
 

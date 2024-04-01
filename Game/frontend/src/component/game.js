@@ -2,10 +2,13 @@
 import Board from "../component/board";
 import { useEffect, useState } from "react";
 import Dice from "../component/Dice.js";
+import Notification from "./notification.js";
 // import { socket } from "../config/socket.js";
 // import { io } from "socket.io-client";
 const Game = ({socket,inRoom,player}) => {
 //   const socket = io();
+const [notification ,setNotification ]= useState(null);
+const [winner ,setWinner]=useState(null);
  const [index, setIndex] =useState(0);
   const [game, setGame] = useState({
     Chance: parseInt(0),
@@ -16,8 +19,10 @@ const Game = ({socket,inRoom,player}) => {
   });
 
   const movePlayer = async (newRoll ,UserMove) => {
-    console.log("MoveUSer",newRoll ,UserMove ,game );
-     socket.emit("MoveUser",{newRoll ,UserMove ,Room:game,index});
+    // console.log("MoveUSer",newRoll ,UserMove ,game );
+     socket.emit("MoveUser",{newRoll,Room:game,index});
+     socket.emit("CheckWinner",inRoom);
+    //  socket.emit('getRoomDetails',game._id);
 //     setGame({...game, chance:game.chance===0?1:0});
 //     //  var i= parseInt((player1.i*10+player1.j+1)/10);
 //     //  var j= (player1.j+1)%10;
@@ -63,37 +68,56 @@ const Game = ({socket,inRoom,player}) => {
   useEffect(()=>{
   
  socket.on("SomeOneJoinRoom",(msg)=>{
-  alert("message"+msg);
+  setNotification(msg);
+  setTimeout(() => {
+    setNotification(null);
+  }, (2000));
   })
+  socket.emit("JoinRoom",inRoom);
+
   
+  socket.on("Winner",(winner)=>{
+    // console.log("Winner !!! "+winner);
+    setWinner(winner);
+    setNotification("Wiiner!!! "+winner);
+    setTimeout(() => {
+      setNotification(null);
+    }, (2000));
+  })
+  socket.on('ClashAndCut',()=>{
+console.log(" One MORE Chance !!!!");
+  })
   socket.emit('getRoomDetails',inRoom);
-  socket.on('takeRoomDetails',(roomDetails)=>{
-    console.log(roomDetails);
+  socket.on('roomDetails',(roomDetails)=>{
+    
     // setGame({currentplaying:roomDetails.chance,players:roomDetails.Players});
-    const JSONplayer= JSON.parse(player);
-    const id=roomDetails?.Players?.findIndex((p)=>p._id===JSONplayer._id);
+  
+    console.log(roomDetails);
+    const id= roomDetails?.Players?.findIndex((p)=>p._id===player._id);
    console.log(id);
-   console.log(roomDetails);
+   
    setIndex(id);
    setGame(roomDetails);
-   console.log("checkS&L");
-  socket.emit('CheckS&L',{Room:roomDetails,UserMove:JSONplayer,index:id});
-  console.log("checkedS&L");
+     console.log("checkS&L");
+    socket.emit('CheckS&L',{Room:roomDetails,UserMove:player,index:id});
+    console.log("checkedS&L");
  })
   },[])
   return (
     <>
+
       <div className="Console flex flex-col w-1/6 md:w-2/12  items-center justify-around h-3/6 border rounded-md shadow-xl bg-blue-300 shadow-slate-400">
+   {notification &&  <div className="fixed top-0 right-0"><Notification>{notification}</Notification></div>}
         <div className="w-full h-4/6 flex flex-col ">
         <div className="showPlayer text-center border  pt-1 pb-1 pl-2 pe-2 w-90 bg-slate-600 text-white ">PlayerName</div>
-        {game?.Players?.map((player) => {
-          return <div className="showPlayer text-center border  pt-1 pb-1 pl-2 pe-2 w-90   ">{player.Name}</div>;
+        {game?.Players?.map((player) => { 
+          return <div className="showPlayer text-center border  pt-1 pb-1 pl-2 pe-2 w-90   ">{player.Name} </div>;
         })}
         </div>
-      <div className="2/6 relative"> <Dice  movePlayer={movePlayer}  player={game?.Players[index]} disabled={index!==game.Chance?true :false} ></Dice></div>
+      <div className="2/6 relative"> <Dice  movePlayer={movePlayer}  player={game?.Players[index]} disabled={((index!==game.Chance)||(game.NoOfPlayers<2)||winner)?true :false} ></Dice></div>
       {/* <div className="2/6 relative"> <Dice  movePlayer={movePlayer}  player={game?.players[1]} disabled={game?.players[1]?.id!==game.currentplaying}></Dice></div> */}
       </div>
-     <div className="border shadow-lg shadow-gray-600"> <Board  PlayersPostion={game.Players} ></Board> </div>
+     <div className="border shadow-lg shadow-gray-600"> <Board  PlayersPostion={game.Players}  ></Board> </div>
     </>
   );
 };

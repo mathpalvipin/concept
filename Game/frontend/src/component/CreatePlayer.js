@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPlayerAPI } from "../api.js/api";
 import axios from "axios";
-const CreatePlayer = ({ propplayer }) => {
-  const { player, setPlayer } = propplayer;
+const CreatePlayer = ({ setPlayer }) => {
+  const [user, setUser]  = useState({Name:"",Color:""});
   const handleCreatePlayer = async (e) => {
     e.preventDefault();
-    console.log(player);
+    // console.log(user);
     try {
-      const createplayer = await axios.post(createPlayerAPI, player);
+      
+      const createplayer = await axios.post(createPlayerAPI, user);
       console.log(createplayer);
       //  localStorage.setItem('userId' , createplayer?.data?.Player?._id);
-      localStorage.setItem("user", JSON.stringify(createplayer?.data?.Player));
+      localStorage.setItem("player", JSON.stringify(createplayer?.data?.Player));
       setPlayer(createplayer?.data?.Player);
     } catch (e) {
-      alert("unable to create player", e.message);
+      console.log(e);
+      alert("unable to create player");
     }
   };
 
@@ -28,8 +30,8 @@ const CreatePlayer = ({ propplayer }) => {
           <input
             className="w-full p-2 border border-gray-600 shadow-sm shadow-gray-800 rounded-lg"
             placeholder="Name"
-            value={player?.name}
-            onChange={(e) => setPlayer({ ...player, name: e.target.value })}
+            value={user?.Name}
+            onChange={(e) => setUser({ ...user, Name: e.target.value })}
           ></input>
           </div>
           
